@@ -8,7 +8,7 @@
 
 ## 🎮 Play Online
 
-👉 https://nanamiapril.github.io/BADJUMP_WEB2/
+👉 https://nanamiapril.github.io/BADJUMP_WEB/
 
 Playable directly in the browser.
 
