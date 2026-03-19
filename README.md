@@ -6,6 +6,18 @@
 
 ![BADJUMP Logo](https://p9-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/f755b0fb3f2a4465b5b770d630f834bd~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=20260318205409D5327FF9F2DADC89AE5C&rrcfp=f06b921b&x-expires=1776430472&x-signature=u73EyCtVIS45bM53fZNYU1CsWhE%3D)
 
+## 🎮 Play Online
+
+👉 https://nanamiapril.github.io/BADJUMP_WEB2/
+
+Playable directly in the browser.
+
+Supports:
+
+- Desktop
+
+No install required.
+
 ### 🤖 AI语音吐槽系统
 - **实时语音评论**：AI会用语音对你的游戏表现进行实时吐槽
 - **丰富的吐槽内容**：100+条刻薄但搞笑的评论
