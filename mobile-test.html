@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TalkTrash - 移动端测试</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .container {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid #00ff00;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .logo {
+            width: 150px;
+            height: 150px;
+            margin-bottom: 20px;
+            image-rendering: pixelated;
+            animation: logoBounce 2s ease-in-out infinite;
+        }
+        
+        @keyframes logoBounce {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        h1 {
+            color: #00ff00;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #00ff00;
+            font-size: 24px;
+        }
+        
+        .qrcode-container {
+            background: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: inline-block;
+        }
+        
+        .qrcode {
+            width: 200px;
+            height: 200px;
+        }
+        
+        .instructions {
+            text-align: left;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(0, 255, 0, 0.1);
+            border-radius: 10px;
+            border-left: 3px solid #00ff00;
+        }
+        
+        .instructions h3 {
+            color: #00ff00;
+            margin-bottom: 10px;
+        }
+        
+        .instructions ol {
+            margin-left: 20px;
+        }
+        
+        .instructions li {
+            margin: 8px 0;
+        }
+        
+        .test-links {
+            margin: 20px 0;
+        }
+        
+        .test-btn {
+            display: block;
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            margin: 10px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.3s;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        
+        .test-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px #ff6b6b;
+        }
+        
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        
+        .status.success {
+            background: rgba(0, 255, 0, 0.2);
+            border: 1px solid #00ff00;
+            color: #00ff00;
+        }
+        
+        .status.warning {
+            background: rgba(255, 255, 0, 0.2);
+            border: 1px solid #ffff00;
+            color: #ffff00;
+        }
+        
+        .device-info {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        .device-info h3 {
+            color: #00ff00;
+            margin-bottom: 10px;
+        }
+        
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .info-label {
+            font-weight: bold;
+            color: #ccc;
+        }
+        
+        .info-value {
+            color: #fff;
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .logo {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .qrcode {
+                width: 150px;
+                height: 150px;
+            }
+            
+            h1 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="https://p26-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/97e6c5524e4c4457a1940d6703a7d5fd~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=20260318120239AF4A6B06043B0EABE4B8&rrcfp=f06b921b&x-expires=1776398598&x-signature=0X8YsxC7422z5u3iRaq6I65OdjQ%3D" alt="TalkTrash Logo" class="logo">
+        
+        <h1>📱 TalkTrash 移动端测试</h1>
+        
+        <div class="status success">
+            🌐 本地服务器运行中: http://0.0.0.0:8000
+        </div>
+        
+        <div class="qrcode-container">
+            <!-- 这里会通过JavaScript生成QR码 -->
+            <div id="qrcode" class="qrcode"></div>
+        </div>
+        
+        <p>📲 扫描上方二维码在手机上打开游戏</p>
+        
+        <div class="test-links">
+            <a href="http://0.0.0.0:8000" class="test-btn" target="_blank">🎮 打开游戏</a>
+            <a href="http://0.0.0.0:8000/voice-test.html" class="test-btn" target="_blank">🔊 语音测试</a>
+        </div>
+        
+        <div class="instructions">
+            <h3>📋 测试步骤:</h3>
+            <ol>
+                <li>使用手机扫描上方二维码</li>
+                <li>测试游戏的触摸控制</li>
+                <li>验证AI语音吐槽功能</li>
+                <li>检查游戏在不同屏幕尺寸下的显示效果</li>
+                <li>测试游戏性能和流畅度</li>
+            </ol>
+        </div>
+        
+        <div class="device-info">
+            <h3>💻 当前设备信息:</h3>
+            <div class="info-item">
+                <span class="info-label">用户代理:</span>
+                <span class="info-value" id="userAgent">检测中...</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">屏幕尺寸:</span>
+                <span class="info-value" id="screenSize">检测中...</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">视口尺寸:</span>
+                <span class="info-value" id="viewportSize">检测中...</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">设备类型:</span>
+                <span class="info-value" id="deviceType">检测中...</span>
+            </div>
+        </div>
+        
+        <div class="status warning">
+            ⚠️ 注意: 本地服务器仅在当前会话有效
+        </div>
+    </div>
+
+    <!-- QR Code Library -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+    
+    <script>
+        // 生成QR码
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取当前页面的URL（替换为实际的服务器地址）
+            const serverUrl = 'http://' + window.location.hostname + ':8000';
+            
+            // 生成QR码
+            QRCode.toCanvas(document.getElementById('qrcode'), serverUrl, {
+                width: 200,
+                margin: 1,
+                color: {
+                    dark: '#00ff00',  // 前景色
+                    light: '#ffffff' // 背景色
+                }
+            }, function (error) {
+                if (error) console.error(error);
+                console.log('QR码生成成功!');
+            });
+            
+            // 获取设备信息
+            document.getElementById('userAgent').textContent = navigator.userAgent;
+            document.getElementById('screenSize').textContent = `${window.screen.width}x${window.screen.height}`;
+            document.getElementById('viewportSize').textContent = `${window.innerWidth}x${window.innerHeight}`;
+            
+            // 检测设备类型
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            document.getElementById('deviceType').textContent = isMobile ? '移动设备' : '桌面设备';
+            
+            // 如果是移动设备，自动跳转到游戏页面
+            if (isMobile && window.location.pathname.includes('mobile-test.html')) {
+                setTimeout(() => {
+                    // 询问用户是否要跳转到游戏
+                    if (confirm('检测到您正在使用移动设备，是否直接跳转到游戏页面？')) {
+                        window.location.href = serverUrl;
+                    }
+                }, 2000);
+            }
+        });
+        
+        // 实时更新视口尺寸
+        window.addEventListener('resize', function() {
+            document.getElementById('viewportSize').textContent = `${window.innerWidth}x${window.innerHeight}`;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TalkTrash - UI Preview</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .preview-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .preview-section {
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #00ff00;
+            border-radius: 10px;
+            padding: 20px;
+            width: 400px;
+        }
+        
+        .preview-title {
+            color: #00ff00;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .logo-options {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .logo-option {
+            text-align: center;
+            cursor: pointer;
+            padding: 10px;
+            border: 2px solid transparent;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        
+        .logo-option:hover {
+            border-color: #00ff00;
+            background: rgba(0, 255, 0, 0.1);
+        }
+        
+        .logo-option.selected {
+            border-color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.2);
+        }
+        
+        .logo-option img {
+            width: 80px;
+            height: 80px;
+            image-rendering: pixelated;
+            margin-bottom: 5px;
+        }
+        
+        .logo-label {
+            color: #fff;
+            font-size: 12px;
+        }
+        
+        .control-preview {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .preview-btn {
+            width: 64px;
+            height: 64px;
+            border: 4px solid #00ff00;
+            background: rgba(0, 0, 0, 0.9);
+            color: #00ff00;
+            font-size: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            box-shadow: 0 4px 0 rgba(0, 100, 0, 0.8);
+            position: relative;
+        }
+        
+        .preview-btn.jump {
+            border-color: #ff6b6b;
+            color: #ff6b6b;
+            box-shadow: 0 4px 0 rgba(139, 0, 0, 0.8);
+            border-radius: 50%;
+        }
+        
+        .preview-btn.direction {
+            border-radius: 0;
+            clip-path: polygon(
+                10% 0%, 90% 0%, 
+                100% 10%, 100% 90%, 
+                90% 100%, 10% 100%, 
+                0% 90%, 0% 10%
+            );
+        }
+        
+        .layout-preview {
+            background: #000;
+            border: 2px solid #00ff00;
+            border-radius: 10px;
+            height: 200px;
+            position: relative;
+            margin: 15px 0;
+        }
+        
+        .layout-controls {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 30px;
+        }
+        
+        .layout-left, .layout-right {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .layout-center {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: -20px;
+        }
+        
+        .apply-btn {
+            background: linear-gradient(45deg, #00ff00, #00cc00);
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            transition: all 0.3s;
+        }
+        
+        .apply-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+        
+        .back-btn {
+            background: transparent;
+            color: #00ff00;
+            border: 2px solid #00ff00;
+            padding: 8px 16px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .back-btn:hover {
+            background: rgba(0, 255, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="preview-container">
+        <div class="preview-section">
+            <div class="preview-title">🎨 Logo 选项</div>
+            <div class="logo-options">
+                <div class="logo-option selected" data-logo="1">
+                    <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/4b003fe233bf48dfbd75be7e8cf4c596~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=20260318125824F14D142FD1DD02B3167E&rrcfp=f06b921b&x-expires=1776401926&x-signature=VB4aan8LEfiFEhMhWygda2eyQro%3D" alt="Logo 1">
+                    <div class="logo-label">Logo 1</div>
+                </div>
+                <div class="logo-option" data-logo="2">
+                    <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/58bc8e1c2746462f92c3e7a275594857~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=20260318125824F14D142FD1DD02B3167E&rrcfp=f06b921b&x-expires=1776401939&x-signature=UEgwQaRq9Fq24QrG%2BvzWcxTOcbE%3D" alt="Logo 2">
+                    <div class="logo-label">Logo 2</div>
+                </div>
+                <div class="logo-option" data-logo="3">
+                    <img src="https://p9-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/f3d3d2ebc9214bb6bf3cd1ac383bbcbc~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=20260318125824F14D142FD1DD02B3167E&rrcfp=f06b921b&x-expires=1776401951&x-signature=1B5QFCOUQMAZdxiS%2BFp8AeJlzI4%3D" alt="Logo 3">
+                    <div class="logo-label">Logo 3</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="preview-section">
+            <div class="preview-title">🎮 控制按钮样式</div>
+            <div class="control-preview">
+                <div class="preview-btn direction">‹</div>
+                <div class="preview-btn jump">↑</div>
+                <div class="preview-btn direction">›</div>
+            </div>
+            <p style="color: #ccc; text-align: center; font-size: 12px;">
+                像素风格按钮，带有按压效果和阴影
+            </p>
+        </div>
+        
+        <div class="preview-section">
+            <div class="preview-title">📱 移动端布局</div>
+            <div class="layout-preview">
+                <div class="layout-controls">
+                    <div class="layout-left">
+                        <div class="preview-btn direction">‹</div>
+                    </div>
+                    <div class="layout-center">
+                        <div class="preview-btn jump">↑</div>
+                    </div>
+                    <div class="layout-right">
+                        <div class="preview-btn direction">›</div>
+                    </div>
+                </div>
+            </div>
+            <p style="color: #ccc; text-align: center; font-size: 12px;">
+                优化的三角布局，更符合人体工程学
+            </p>
+        </div>
+        
+        <div style="display: flex; gap: 10px;">
+            <button class="apply-btn" onclick="applyChanges()">应用更改</button>
+            <button class="back-btn" onclick="goBack()">返回游戏</button>
+        </div>
+    </div>
+
+    <script>
+        // Logo选择功能
+        document.querySelectorAll('.logo-option').forEach(option => {
+            option.addEventListener('click', function() {
+                // 移除其他选中状态
+                document.querySelectorAll('.logo-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                // 添加选中状态
+                this.classList.add('selected');
+            });
+        });
+        
+        // 应用更改
+        function applyChanges() {
+            const selectedLogo = document.querySelector('.logo-option.selected');
+            const logoId = selectedLogo.dataset.logo;
+            
+            alert(`已选择 Logo ${logoId}！\nUI 优化已完成，请刷新游戏页面查看效果。`);
+        }
+        
+        // 返回游戏
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

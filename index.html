@@ -1,0 +1,57 @@
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BADJUMP - AI Roast Jump Game</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="device-shell">
+        <div id="game-container">
+            <canvas id="gameCanvas"></canvas>
+
+            <div id="ui-layer">
+                <div id="score-display">Score: 0</div>
+                <div id="ai-avatar">🎭</div>
+                <div id="ai-subtitle"></div>
+
+                <div id="start-screen">
+                    <img src="https://p9-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/f755b0fb3f2a4465b5b770d630f834bd~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=20260318205409D5327FF9F2DADC89AE5C&rrcfp=f06b921b&x-expires=1776430472&x-signature=u73EyCtVIS45bM53fZNYU1CsWhE%3D" alt="BADJUMP Logo" class="game-logo">
+                    <p>TRY NOT TO FAIL</p>
+                    <button id="start-btn" class="menu-btn">Start Game</button>
+                </div>
+
+                <div id="game-over-screen">
+                    <div class="game-over-content">
+                        <h2>Game Over!</h2>
+                        <p>Final Score: <span id="final-score">0</span></p>
+                        <p id="ai-final-comment"></p>
+                        <button id="restart-btn" class="menu-btn">Play Again</button>
+                    </div>
+                    <button id="share-btn" class="menu-btn">Share</button>
+                </div>
+
+                <div id="mobile-controls">
+                    <div class="left-controls">
+                        <button id="left-btn" class="control-btn"><span>‹</span></button>
+                    </div>
+                    
+                    <div class="center-controls">
+                        <button id="jump-btn" class="control-btn"><span>↑</span></button>
+                    </div>
+
+                    <div class="right-controls">
+                        <button id="right-btn" class="control-btn"><span>›</span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/ai_commentary.js"></script>
+    <script src="js/events.js"></script>
+    <script src="js/player.js"></script>
+    <script src="js/platform.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/game.js"></script>
+
+</body></html>

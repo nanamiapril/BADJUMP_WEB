@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TalkTrash - 部署工具</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&display=swap');
+        
+        body {
+            font-family: 'Orbitron', monospace;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .terminal {
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #00ff00;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+            font-family: 'Courier New', monospace;
+        }
+        
+        .terminal-header {
+            background: #00ff00;
+            color: #000;
+            padding: 8px 15px;
+            border-radius: 8px 8px 0 0;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .terminal-body {
+            padding: 20px;
+            min-height: 200px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .terminal-line {
+            margin: 5px 0;
+            display: flex;
+        }
+        
+        .prompt {
+            color: #00ff00;
+            margin-right: 10px;
+        }
+        
+        .output {
+            flex: 1;
+        }
+        
+        .success {
+            color: #00ff00;
+        }
+        
+        .error {
+            color: #ff0000;
+        }
+        
+        .warning {
+            color: #ffff00;
+        }
+        
+        .info {
+            color: #00ffff;
+        }
+        
+        .btn-deploy {
+            background: linear-gradient(45deg, #00ff00, #00cc00);
+            color: #000;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Orbitron', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .btn-deploy:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+        }
+        
+        .btn-deploy:active {
+            transform: scale(0.95);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: #00ff00;
+            border: 2px solid #00ff00;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Orbitron', monospace;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(0, 255, 0, 0.1);
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 255, 0, 0.2);
+            border-color: #00ff00;
+        }
+        
+        .glow-text {
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.7);
+        }
+        
+        .platform-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff00, #00cc00);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .loading {
+            animation: pulse 1.5s infinite;
+        }
+        
+        .github-logo {
+            width: 40px;
+            height: 40px;
+            transition: transform 0.3s;
+        }
+        
+        .github-logo:hover {
+            transform: rotate(360deg);
+        }
+        
+        @media (max-width: 768px) {
+            .terminal-body {
+                padding: 15px;
+                min-height: 150px;
+                max-height: 300px;
+            }
+            
+            .btn-deploy {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+            
+            .card {
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div class="max-w-6xl mx-auto">
+        <!-- 头部 -->
+        <header class="text-center mb-12">
+            <div class="flex justify-center items-center mb-4">
+                <img src="https://p26-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/97e6c5524e4c4457a1940d6703a7d5fd~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=20260318120239AF4A6B06043B0EABE4B8&rrcfp=f06b921b&x-expires=1776398598&x-signature=0X8YsxC7422z5u3iRaq6I65OdjQ%3D" 
+                     alt="TalkTrash Logo" 
+                     class="w-24 h-24 md:w-32 md:h-32 mr-4"
+                     style="image-rendering: pixelated;">
+                <div>
+                    <h1 class="text-4xl md:text-5xl font-bold text-white glow-text">TalkTrash</h1>
+                    <p class="text-xl text-green-400">一键部署工具</p>
+                </div>
+            </div>
+            <p class="text-gray-400 max-w-2xl mx-auto">
+                轻松将您的 TalkTrash 游戏部署到云端，让全球玩家都能体验这款AI语音吐槽跳跃游戏！
+            </p>
+        </header>
+
+        <!-- 部署选项 -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            <div class="card p-6 text-center">
+                <div class="platform-icon text-blue-400">
+                    <i class="fa fa-github fa-2x"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-2">GitHub Pages</h3>
+                <p class="text-gray-400 mb-4">免费托管，简单易用，支持自定义域名</p>
+                <button class="btn-deploy" onclick="selectPlatform('github')">
+                    <i class="fa fa-rocket mr-2"></i> 部署到 GitHub
+                </button>
+            </div>
+            
+            <div class="card p-6 text-center">
+                <div class="platform-icon text-blue-500">
+                    <i class="fa fa-cloud fa-2x"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-2">Netlify</h3>
+                <p class="text-gray-400 mb-4">高性能CDN，自动HTTPS，持续部署</p>
+                <button class="btn-secondary" onclick="showInfo('netlify')">
+                    <i class="fa fa-info-circle mr-2"></i> 查看教程
+                </button>
+            </div>
+            
+            <div class="card p-6 text-center">
+                <div class="platform-icon text-purple-500">
+                    <i class="fa fa-bolt fa-2x"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-2">Vercel</h3>
+                <p class="text-gray-400 mb-4">超快速度，自动预览，零配置部署</p>
+                <button class="btn-secondary" onclick="showInfo('vercel')">
+                    <i class="fa fa-info-circle mr-2"></i> 查看教程
+                </button>
+            </div>
+        </div>
+
+        <!-- 部署配置 -->
+        <div id="deploy-config" class="hidden mb-8">
+            <div class="card p-6">
+                <h3 class="text-2xl font-bold mb-4 text-center">部署配置</h3>
+                
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-400 mb-2">
+                        GitHub 仓库名称
+                    </label>
+                    <input type="text" id="repo-name" value="talktrash-game" 
+                           class="w-full bg-black border border-green-500 rounded px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-green-500">
+                </div>
+                
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-400 mb-2">
+                        部署环境
+                    </label>
+                    <select id="deploy-env" class="w-full bg-black border border-green-500 rounded px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <option value="production">生产环境</option>
+                        <option value="development">开发环境</option>
+                    </select>
+                </div>
+                
+                <div class="flex justify-center space-x-4">
+                    <button class="btn-deploy" onclick="startDeployment()">
+                        <i class="fa fa-play mr-2"></i> 开始部署
+                    </button>
+                    <button class="btn-secondary" onclick="cancelDeployment()">
+                        <i class="fa fa-times mr-2"></i> 取消
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 部署终端 -->
+        <div id="deploy-terminal" class="hidden mb-8">
+            <div class="terminal">
+                <div class="terminal-header">
+                    <span><i class="fa fa-terminal mr-2"></i> 部署终端</span>
+                    <div>
+                        <span id="deployment-status" class="text-sm bg-black px-2 py-1 rounded">准备中</span>
+                    </div>
+                </div>
+                <div class="terminal-body" id="terminal-output">
+                    <div class="terminal-line">
+                        <span class="prompt">talktrash@deploy:~$</span>
+                        <span class="output info">初始化部署环境...</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-4">
+                <div class="progress-bar">
+                    <div id="progress-fill" class="progress-fill"></div>
+                </div>
+                <div class="text-center text-sm text-gray-400 mt-2">
+                    <span id="progress-text">准备部署...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 部署结果 -->
+        <div id="deploy-result" class="hidden">
+            <div class="card p-6 text-center">
+                <div id="result-icon" class="text-6xl mb-4">
+                    <i class="fa fa-check-circle text-green-500"></i>
+                </div>
+                <h3 id="result-title" class="text-2xl font-bold mb-2">部署成功！</h3>
+                <p id="result-message" class="text-gray-400 mb-6">
+                    您的 TalkTrash 游戏已成功部署到 GitHub Pages！
+                </p>
+                
+                <div id="result-links" class="mb-6">
+                    <div class="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-6">
+                        <a id="game-link" href="#" target="_blank" class="btn-deploy">
+                            <i class="fa fa-gamepad mr-2"></i> 访问游戏
+                        </a>
+                        <a id="repo-link" href="#" target="_blank" class="btn-secondary">
+                            <i class="fa fa-github mr-2"></i> 查看仓库
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="text-sm text-gray-500">
+                    <p>🎉 恭喜！您的游戏现在可以被全球玩家访问了！</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 部署指南链接 -->
+        <div class="text-center mt-12 mb-8">
+            <h3 class="text-xl font-bold mb-4">详细部署指南</h3>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="DEPLOYMENT_GUIDE.md" target="_blank" class="btn-secondary">
+                    <i class="fa fa-file-text mr-2"></i> 查看完整文档
+                </a>
+                <a href="#" onclick="showLocalDeploy()" class="btn-secondary">
+                    <i class="fa fa-server mr-2"></i> 本地服务器部署
+                </a>
+                <a href="#" onclick="showManualDeploy()" class="btn-secondary">
+                    <i class="fa fa-code mr-2"></i> 手动部署教程
+                </a>
+            </div>
+        </div>
+
+        <!-- 页脚 -->
+        <footer class="text-center text-gray-500 text-sm mt-12">
+            <p>&copy; 2024 TalkTrash Game. 让吐槽更有趣！</p>
+        </footer>
+    </div>
+
+    <script>
+        let deploymentStep = 0;
+        let deploymentInterval;
+        let currentPlatform = '';
+        
+        // 选择部署平台
+        function selectPlatform(platform) {
+            currentPlatform = platform;
+            document.getElementById('deploy-config').classList.remove('hidden');
+            document.getElementById('deploy-config').scrollIntoView({ behavior: 'smooth' });
+            
+            addTerminalLine('info', `选择部署平台: ${platform.toUpperCase()}`);
+        }
+        
+        // 显示信息
+        function showInfo(platform) {
+            const messages = {
+                netlify: 'Netlify 部署教程将在文档中提供。请先查看部署指南文档。',
+                vercel: 'Vercel 部署教程将在文档中提供。请先查看部署指南文档。'
+            };
+            
+            alert(messages[platform]);
+        }
+        
+        // 开始部署
+        function startDeployment() {
+            const repoName = document.getElementById('repo-name').value.trim();
+            if (!repoName) {
+                alert('请输入有效的仓库名称');
+                return;
+            }
+            
+            document.getElementById('deploy-config').classList.add('hidden');
+            document.getElementById('deploy-terminal').classList.remove('hidden');
+            document.getElementById('deploy-terminal').scrollIntoView({ behavior: 'smooth' });
+            
+            document.getElementById('deployment-status').textContent = '部署中';
+            document.getElementById('deployment-status').className = 'text-sm bg-yellow-500 text-black px-2 py-1 rounded';
+            
+            addTerminalLine('info', `开始部署到 ${currentPlatform.toUpperCase()}...`);
+            addTerminalLine('info', `仓库名称: ${repoName}`);
+            
+            // 模拟部署过程
+            startDeploymentSimulation(repoName);
+        }
+        
+        // 模拟部署过程
+        function startDeploymentSimulation(repoName) {
+            const steps = [
+                { text: '初始化Git仓库...', type: 'info', progress: 10 },
+                { text: '配置Git用户信息...', type: 'info', progress: 20 },
+                { text: '添加所有文件到Git...', type: 'info', progress: 30 },
+                { text: '创建初始提交...', type: 'success', progress: 40 },
+                { text: '连接到GitHub仓库...', type: 'info', progress: 50 },
+                { text: '推送代码到GitHub...', type: 'info', progress: 70 },
+                { text: '配置GitHub Pages...', type: 'info', progress: 80 },
+                { text: '部署完成！游戏已上线！', type: 'success', progress: 100 }
+            ];
+            
+            let stepIndex = 0;
+            
+            deploymentInterval = setInterval(() => {
+                if (stepIndex < steps.length) {
+                    const step = steps[stepIndex];
+                    addTerminalLine(step.type, step.text);
+                    updateProgress(step.progress);
+                    stepIndex++;
+                } else {
+                    clearInterval(deploymentInterval);
+                    finishDeployment(repoName);
+                }
+            }, 1500);
+        }
+        
+        // 完成部署
+        function finishDeployment(repoName) {
+            const username = 'your-github-username'; // 这里应该从配置或输入获取
+            const gameUrl = `https://${username}.github.io/${repoName}/`;
+            const repoUrl = `https://github.com/${username}/${repoName}`;
+            
+            document.getElementById('deployment-status').textContent = '完成';
+            document.getElementById('deployment-status').className = 'text-sm bg-green-500 text-black px-2 py-1 rounded';
+            
+            // 显示结果
+            setTimeout(() => {
+                document.getElementById('deploy-terminal').classList.add('hidden');
+                document.getElementById('deploy-result').classList.remove('hidden');
+                document.getElementById('deploy-result').scrollIntoView({ behavior: 'smooth' });
+                
+                document.getElementById('game-link').href = gameUrl;
+                document.getElementById('repo-link').href = repoUrl;
+                
+                addTerminalLine('success', `游戏地址: ${gameUrl}`);
+                addTerminalLine('success', `仓库地址: ${repoUrl}`);
+            }, 2000);
+        }
+        
+        // 取消部署
+        function cancelDeployment() {
+            if (deploymentInterval) {
+                clearInterval(deploymentInterval);
+            }
+            
+            document.getElementById('deploy-config').classList.add('hidden');
+            document.getElementById('deploy-terminal').classList.add('hidden');
+            document.getElementById('deploy-result').classList.add('hidden');
+            
+            addTerminalLine('error', '部署已取消');
+        }
+        
+        // 添加终端行
+        function addTerminalLine(type, text) {
+            const terminal = document.getElementById('terminal-output');
+            const line = document.createElement('div');
+            line.className = 'terminal-line';
+            
+            const prompt = document.createElement('span');
+            prompt.className = 'prompt';
+            prompt.textContent = 'talktrash@deploy:~$';
+            
+            const output = document.createElement('span');
+            output.className = `output ${type}`;
+            output.textContent = text;
+            
+            line.appendChild(prompt);
+            line.appendChild(output);
+            terminal.appendChild(line);
+            
+            // 滚动到底部
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+        
+        // 更新进度条
+        function updateProgress(percent) {
+            document.getElementById('progress-fill').style.width = `${percent}%`;
+            document.getElementById('progress-text').textContent = `部署进度: ${percent}%`;
+        }
+        
+        // 显示本地部署
+        function showLocalDeploy() {
+            alert('本地服务器部署：\n\n1. 确保已安装Node.js\n2. 在项目目录运行: npm install -g http-server\n3. 运行: http-server -p 8080\n4. 访问: http://localhost:8080');
+        }
+        
+        // 显示手动部署
+        function showManualDeploy() {
+            alert('手动部署步骤：\n\n1. 创建GitHub仓库\n2. 初始化Git: git init\n3. 添加文件: git add .\n4. 提交: git commit -m "Initial commit"\n5. 添加远程: git remote add origin <repo-url>\n6. 推送: git push -u origin main\n7. 在GitHub设置中启用Pages');
+        }
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            addTerminalLine('info', '欢迎使用 TalkTrash 一键部署工具');
+            addTerminalLine('info', '选择部署平台开始部署过程');
+        });
+    </script>
+</body>
+</html>

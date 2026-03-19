@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>语音测试 - TalkTrash</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .container {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 30px;
+            border-radius: 10px;
+            border: 2px solid #00ff00;
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+        
+        h1 {
+            color: #00ff00;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #00ff00;
+        }
+        
+        button {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px #ff6b6b;
+        }
+        
+        .status {
+            margin: 20px 0;
+            padding: 10px;
+            border-radius: 5px;
+            background: rgba(0, 255, 0, 0.1);
+            border-left: 3px solid #00ff00;
+        }
+        
+        .test-comments {
+            text-align: left;
+            margin-top: 20px;
+        }
+        
+        .test-comments h3 {
+            color: #00ff00;
+            margin-bottom: 10px;
+        }
+        
+        .comment-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px;
+            margin: 5px 0;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .comment-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 TalkTrash 语音测试</h1>
+        
+        <div class="status" id="status">
+            正在初始化语音系统...
+        </div>
+        
+        <button onclick="testVoice()">测试语音</button>
+        <button onclick="testGameStart()">游戏开始语音</button>
+        <button onclick="testJumpComment()">跳跃评论语音</button>
+        <button onclick="stopVoice()">停止语音</button>
+        
+        <div class="test-comments">
+            <h3>测试评论：</h3>
+            <div class="comment-item" onclick="playComment(this.textContent)">
+                Oh great, another hero thinks they can conquer this game. Spoiler: you can't.
+            </div>
+            <div class="comment-item" onclick="playComment(this.textContent)">
+                That jump was so bad, even I'm embarrassed for you.
+            </div>
+            <div class="comment-item" onclick="playComment(this.textContent)">
+                And down you go! Surprise, surprise.
+            </div>
+            <div class="comment-item" onclick="playComment(this.textContent)">
+                A whole point! Call the president! Wait, no, he's busy with important things.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 简化版的AI评论类用于测试
+        class TestAICommentary {
+            constructor() {
+                this.speechSynthesis = window.speechSynthesis;
+                this.voice = null;
+                this.initVoice();
+            }
+
+            initVoice() {
+                const updateStatus = (message) => {
+                    document.getElementById('status').textContent = message;
+                };
+
+                const checkVoice = () => {
+                    const voices = this.speechSynthesis.getVoices();
+                    if (voices.length > 0) {
+                        this.voice = voices.find(v => v.lang.includes('en')) || voices[0];
+                        updateStatus(`语音已加载: ${this.voice.name} (${this.voice.lang})`);
+                    } else {
+                        updateStatus('正在加载语音...');
+                        setTimeout(checkVoice, 100);
+                    }
+                };
+
+                window.speechSynthesis.onvoiceschanged = checkVoice;
+                checkVoice();
+            }
+
+            playVoice(text) {
+                this.speechSynthesis.cancel();
+                
+                if (!this.voice) {
+                    document.getElementById('status').textContent = '错误：语音未加载完成';
+                    return;
+                }
+                
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.voice = this.voice;
+                utterance.lang = 'en-US';
+                utterance.rate = 1.1;
+                utterance.pitch = 1.0;
+                utterance.volume = 1.0;
+                
+                utterance.onstart = () => {
+                    document.getElementById('status').textContent = `正在播放: "${text.substring(0, 30)}..."`;
+                };
+                
+                utterance.onend = () => {
+                    document.getElementById('status').textContent = '播放完成';
+                };
+                
+                utterance.onerror = (event) => {
+                    document.getElementById('status').textContent = `错误: ${event.error}`;
+                };
+                
+                this.speechSynthesis.speak(utterance);
+            }
+        }
+
+        // 全局实例
+        const aiCommentary = new TestAICommentary();
+
+        // 测试函数
+        function testVoice() {
+            aiCommentary.playVoice("Hello! This is a test of the voice synthesis system.");
+        }
+
+        function testGameStart() {
+            aiCommentary.playVoice("Oh great, another hero thinks they can conquer this game. Spoiler: you can't.");
+        }
+
+        function testJumpComment() {
+            aiCommentary.playVoice("That jump was so bad, even I'm embarrassed for you.");
+        }
+
+        function stopVoice() {
+            aiCommentary.speechSynthesis.cancel();
+            document.getElementById('status').textContent = '语音已停止';
+        }
+
+        function playComment(text) {
+            aiCommentary.playVoice(text);
+        }
+    </script>
+</body>
+</html>
